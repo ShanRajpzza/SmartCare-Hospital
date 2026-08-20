@@ -1,25 +1,32 @@
 package com.sltc.smartcare.entity;
 
-import jakarta.persistence.*;
-//import lombok.Getter;
-//import lombok.Setter;
-//import lombok.NoArgsConstructor;
-//import lombok.AllArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDate;
 
 @MappedSuperclass
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
 public abstract class Person {
 
+    @Column(name = "Full_Name")
     private String name;
+
+    @Column(name = "DOB")
     private LocalDate dob;
+
+    @Column(name = "Gender")
     private String gender;
+
+    @Column(name = "Address")
     private String address;
+
+    @Column(name = "Contact_Number")
     private String contactNumber;
 
+    // Hibernate/JPA සඳහා අත්‍යවශ්‍ය Default (No-Args) Constructor එක
+    public Person() {
+    }
+
+    // Parameterized Constructor
     public Person(String name, LocalDate dob, String gender, String address, String contactNumber) {
         this.name = name;
         this.dob = dob;
@@ -28,6 +35,7 @@ public abstract class Person {
         this.contactNumber = contactNumber;
     }
 
+    // Getters and Setters
     public String getName() {
         return name;
     }

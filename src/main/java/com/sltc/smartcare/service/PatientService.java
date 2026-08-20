@@ -1,6 +1,7 @@
 package com.sltc.smartcare.service;
 
 import com.sltc.smartcare.entity.Patient;
+import com.sltc.smartcare.exception.ResourceNotFoundException;
 import com.sltc.smartcare.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,12 @@ public class PatientService {
         return patientRepository.findAll();
     }
 
-    public Patient getPatientById(Long id) {
+    public Patient getPatientById(String id) {
         return patientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found with ID: " + id));
     }
 
-    public Patient updatePatient(Long id, Patient updatedPatient) {
+    public Patient updatePatient(String id, Patient updatedPatient) {
         Patient existingPatient = getPatientById(id);
 
         existingPatient.setName(updatedPatient.getName());
@@ -40,12 +41,11 @@ public class PatientService {
         return patientRepository.save(existingPatient);
     }
 
-    public void deletePatient(Long id) {
+    public void deletePatient(String id) {
         if (!patientRepository.existsById(id)) {
-            throw new RuntimeException("Patient not found with ID: " + id);
+            throw new ResourceNotFoundException("Patient not found with ID: " + id);
         }
         patientRepository.deleteById(id);
-
     }
 
     public List<Patient> searchPatientsByName(String name) {

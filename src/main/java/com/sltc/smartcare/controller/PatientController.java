@@ -32,20 +32,20 @@ public class PatientController {
 
     // 3. View Patient Details by ID (GET)
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
+    public ResponseEntity<Patient> getPatientById(@PathVariable String id) { // Long -> String
         return ResponseEntity.ok(patientService.getPatientById(id));
     }
 
     // 4. Update Patient Details (PUT)
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @Valid @RequestBody Patient patient) {
+    public ResponseEntity<Patient> updatePatient(@PathVariable String id, @Valid @RequestBody Patient patient) { // Long -> String
         Patient updated = patientService.updatePatient(id, patient);
         return ResponseEntity.ok(updated);
     }
 
     // 5. Delete Patient Record (DELETE)
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePatient(@PathVariable Long id) {
+    public ResponseEntity<String> deletePatient(@PathVariable String id) { // Long -> String
         patientService.deletePatient(id);
         return ResponseEntity.ok("Patient deleted successfully!");
     }

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Long> {
+public interface PatientRepository extends JpaRepository<Patient, String> {
 
-    // නම අනුව Search කිරීමට මෙම line එක අත්‍යවශ්‍ය වේ
+
     List<Patient> findByNameContainingIgnoreCase(String name);
 }
