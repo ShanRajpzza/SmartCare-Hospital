@@ -24,7 +24,7 @@ public class DoctorService {
         if (doctor.getDoctorId() == null || doctor.getDoctorId().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error: Doctor ID cannot be empty!");
         }
-        // getDoctorName() වෙනුවට getName() පාවිච්චි කර ඇත
+        // used getName() for  getDoctorName()
         if (doctor.getName() == null || doctor.getName().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error: Doctor Name cannot be empty!");
         }
@@ -56,10 +56,8 @@ public class DoctorService {
     public Doctor updateDoctor(String doctorId, Doctor doctorDetails) {
         Doctor doctor = getDoctorById(doctorId);
 
-        // setDoctorName() වෙනුවට setName() පාවිච්චි කර ඇත
         if (doctorDetails.getName() != null) doctor.setName(doctorDetails.getName());
 
-        // නාවීගේ Person ක්ලාස් එකෙන් ආපු අලුත් fields අප්ඩේට් කිරීම
         if (doctorDetails.getDob() != null) doctor.setDob(doctorDetails.getDob());
         if (doctorDetails.getGender() != null) doctor.setGender(doctorDetails.getGender());
         if (doctorDetails.getAddress() != null) doctor.setAddress(doctorDetails.getAddress());
@@ -78,7 +76,6 @@ public class DoctorService {
     }
 
     public List<Doctor> searchDoctorsByName(String name) {
-        // findByDoctorName... වෙනුවට findByName... පාවිච්චි කර ඇත
         return doctorRepository.findByNameContainingIgnoreCase(name);
     }
 

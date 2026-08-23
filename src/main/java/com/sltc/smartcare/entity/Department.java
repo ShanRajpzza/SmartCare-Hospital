@@ -18,7 +18,7 @@ public class Department {
     @Column(name = "Location", length = 100)
     private String location;
 
-    // @JsonIgnore prevents infinite recursion during JSON serialization (Loop වෙන එක නවත්වනවා)
+    // @JsonIgnore prevents infinite recursion during JSON serialization
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "Head_Doctor_ID")

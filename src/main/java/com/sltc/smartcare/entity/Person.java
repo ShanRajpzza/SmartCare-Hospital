@@ -22,7 +22,7 @@ public abstract class Person {
     @Column(name = "Contact_Number")
     private String contactNumber;
 
-    // Hibernate/JPA සඳහා අත්‍යවශ්‍ය Default (No-Args) Constructor එක
+    // Default (No-Args) constructor required by Hibernate/JPA
     public Person() {
     }
 
