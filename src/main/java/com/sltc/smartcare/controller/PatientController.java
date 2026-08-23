@@ -2,7 +2,6 @@ package com.sltc.smartcare.controller;
 
 import com.sltc.smartcare.entity.Patient;
 import com.sltc.smartcare.service.PatientService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,40 +18,70 @@ public class PatientController {
 
     // 1. Register Patient (POST)
     @PostMapping
-    public ResponseEntity<Patient> registerPatient(@Valid @RequestBody Patient patient) {
-        Patient savedPatient = patientService.registerPatient(patient);
-        return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);
+    public ResponseEntity<?> registerPatient(@RequestBody Patient patient) {
+        try {
+            Patient savedPatient = patientService.registerPatient(patient);
+            return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     // 2. View All Patients (GET)
     @GetMapping
-    public ResponseEntity<List<Patient>> getAllPatients() {
-        return ResponseEntity.ok(patientService.getAllPatients());
+    public ResponseEntity<?> getAllPatients() {
+        try {
+            List<Patient> patients = patientService.getAllPatients();
+            return new ResponseEntity<>(patients, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // 3. View Patient Details by ID (GET)
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatientById(@PathVariable String id) { // Long -> String
-        return ResponseEntity.ok(patientService.getPatientById(id));
+    public ResponseEntity<?> getPatientById(@PathVariable String id) {
+        try {
+            Patient patient = patientService.getPatientById(id);
+            return new ResponseEntity<>(patient, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     // 4. Update Patient Details (PUT)
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable String id, @Valid @RequestBody Patient patient) { // Long -> String
-        Patient updated = patientService.updatePatient(id, patient);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<?> updatePatient(@PathVariable String id, @RequestBody Patient patient) {
+        try {
+            Patient updated = patientService.updatePatient(id, patient);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     // 5. Delete Patient Record (DELETE)
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePatient(@PathVariable String id) { // Long -> String
-        patientService.deletePatient(id);
-        return ResponseEntity.ok("Patient deleted successfully!");
+    public ResponseEntity<?> deletePatient(@PathVariable String id) {
+        try {
+            patientService.deletePatient(id);
+            return new ResponseEntity<>("Patient deleted successfully!", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     // 6. Search Patients by Name (GET)
     @GetMapping("/search")
-    public ResponseEntity<List<Patient>> searchPatients(@RequestParam("name") String name) {
-        return ResponseEntity.ok(patientService.searchPatientsByName(name));
+    public ResponseEntity<?> searchPatients(@RequestParam("name") String name) {
+        try {
+            List<Patient> patients = patientService.searchPatientsByName(name);
+            if (patients.isEmpty()) {
+                return new ResponseEntity<>("No patients found matching the name: " + name, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(patients, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
