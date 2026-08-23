@@ -20,12 +20,12 @@ public class DoctorService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
-    // Validates mandatory fields before saving or updating
     private void validateDoctor(Doctor doctor) {
         if (doctor.getDoctorId() == null || doctor.getDoctorId().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error: Doctor ID cannot be empty!");
         }
-        if (doctor.getDoctorName() == null || doctor.getDoctorName().trim().isEmpty()) {
+        // getDoctorName() වෙනුවට getName() පාවිච්චි කර ඇත
+        if (doctor.getName() == null || doctor.getName().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error: Doctor Name cannot be empty!");
         }
         if (doctor.getSpecialization() == null || doctor.getSpecialization().trim().isEmpty()) {
@@ -36,7 +36,6 @@ public class DoctorService {
         }
     }
 
-    // Adds a new doctor with duplicate ID validation
     public Doctor addDoctor(Doctor doctor) {
         if (doctorRepository.existsById(doctor.getDoctorId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Error: Doctor with ID " + doctor.getDoctorId() + " already exists!");
@@ -45,23 +44,27 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
-    // Retrieves all doctors
     public List<Doctor> getAllDoctors() {
         return doctorRepository.findAll();
     }
 
-    // Finds a specific doctor by ID, throws 404 if not found
     public Doctor getDoctorById(String doctorId) {
         return doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error: Doctor not found with ID: " + doctorId));
     }
 
-    // Updates existing doctor details dynamically
     public Doctor updateDoctor(String doctorId, Doctor doctorDetails) {
         Doctor doctor = getDoctorById(doctorId);
 
-        if (doctorDetails.getDoctorName() != null) doctor.setDoctorName(doctorDetails.getDoctorName());
+        // setDoctorName() වෙනුවට setName() පාවිච්චි කර ඇත
+        if (doctorDetails.getName() != null) doctor.setName(doctorDetails.getName());
+
+        // නාවීගේ Person ක්ලාස් එකෙන් ආපු අලුත් fields අප්ඩේට් කිරීම
+        if (doctorDetails.getDob() != null) doctor.setDob(doctorDetails.getDob());
+        if (doctorDetails.getGender() != null) doctor.setGender(doctorDetails.getGender());
+        if (doctorDetails.getAddress() != null) doctor.setAddress(doctorDetails.getAddress());
         if (doctorDetails.getContactNumber() != null) doctor.setContactNumber(doctorDetails.getContactNumber());
+
         if (doctorDetails.getQualification() != null) doctor.setQualification(doctorDetails.getQualification());
         if (doctorDetails.getSpecialization() != null) doctor.setSpecialization(doctorDetails.getSpecialization());
         if (doctorDetails.getConsultationFee() != null) doctor.setConsultationFee(doctorDetails.getConsultationFee());
@@ -69,18 +72,16 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
-    // Deletes a doctor by ID
     public void deleteDoctor(String doctorId) {
         Doctor doctor = getDoctorById(doctorId);
         doctorRepository.delete(doctor);
     }
 
-    // Searches for doctors using a partial name match
     public List<Doctor> searchDoctorsByName(String name) {
-        return doctorRepository.findByDoctorNameContainingIgnoreCase(name);
+        // findByDoctorName... වෙනුවට findByName... පාවිච්චි කර ඇත
+        return doctorRepository.findByNameContainingIgnoreCase(name);
     }
 
-    // Assigns an existing department to a doctor
     public Doctor assignDepartment(String doctorId, String departmentId) {
         Doctor doctor = getDoctorById(doctorId);
         Department department = departmentRepository.findById(departmentId)

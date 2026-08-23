@@ -7,9 +7,9 @@ import java.util.List;
 
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, String> {
-    // Custom query to search doctors by name (case-insensitive)
-    List<Doctor> findByDoctorNameContainingIgnoreCase(String name);
 
-    // Custom query to find all doctors in a specific department
+    // Spring Boot එකට දැන් හොයන්න ඕනේ 'name' කියන field එකෙන්
+    List<Doctor> findByNameContainingIgnoreCase(String name);
+
     List<Doctor> findByDepartment_DepartmentId(String departmentId);
 }

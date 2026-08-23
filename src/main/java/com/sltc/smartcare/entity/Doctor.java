@@ -2,18 +2,19 @@ package com.sltc.smartcare.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-// Doctor entity extending Person to inherit common attributes
 @Entity
 @Table(name = "doctor")
+// මෙන්න මේ කෑල්ල තමයි අලුතෙන් එකතු වෙන්නේ (Database එක වෙනස් නොකර ඉන්න)
+@AttributeOverrides({
+        @AttributeOverride(name = "name", column = @Column(name = "Doctor_Name"))
+})
 public class Doctor extends Person {
 
     @Id
     @Column(name = "Doctor_ID", length = 20)
     private String doctorId;
-
-    @Column(name = "Doctor_Name", nullable = false, length = 100)
-    private String doctorName;
 
     @Column(name = "Qualification", nullable = false, length = 50)
     private String qualification;
@@ -24,19 +25,27 @@ public class Doctor extends Person {
     @Column(name = "Consultation_Fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal consultationFee;
 
-    // Many to One relationship with Department
     @ManyToOne
     @JoinColumn(name = "Department_ID")
     private Department department;
 
-    public Doctor() {}
+    public Doctor() {
+        super();
+    }
 
-    //Getters and setters
+    // Person එකේ variables ටිකත් එක්ක Constructor එක
+    public Doctor(String name, LocalDate dob, String gender, String address, String contactNumber,
+                  String doctorId, String qualification, String specialization, BigDecimal consultationFee) {
+        super(name, dob, gender, address, contactNumber);
+        this.doctorId = doctorId;
+        this.qualification = qualification;
+        this.specialization = specialization;
+        this.consultationFee = consultationFee;
+    }
+
+    // Doctor ට අදාළ Getters and Setters විතරයි තියෙන්නේ
     public String getDoctorId() { return doctorId; }
     public void setDoctorId(String doctorId) { this.doctorId = doctorId; }
-
-    public String getDoctorName() { return doctorName; }
-    public void setDoctorName(String doctorName) { this.doctorName = doctorName; }
 
     public String getQualification() { return qualification; }
     public void setQualification(String qualification) { this.qualification = qualification; }
